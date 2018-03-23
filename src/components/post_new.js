@@ -2,10 +2,11 @@ import React,{Component} from 'react'
 import {Field,reduxForm} from 'redux-form'
 import {Link} from 'react-router-dom'
 import '../style/style.css'
+import {connect} from 'react-redux'
+import {createPost} from '../actions'
 
 class PostNew extends Component {
   renderField(field){
-
     const { meta: { touched, error } } = field;
     const className = `form-group ${touched && error ? 'has-danger' : ''}`
 
@@ -17,19 +18,22 @@ class PostNew extends Component {
           type="text"
           {...field.input}
         />
-      <p className="text-help">
+        <div className="text-help">
           {touched ? error : ''}
-        </p>
+        </div>
       </div>
     )
   }
 
   onSubmit(values){
-    console.log(values);
+    this.props.createPost(values, ()=>{
+      this.props.history.push('/')
+    })
   }
-  render(){
 
+  render(){
     const {handleSubmit} = this.props;
+
     return(
       <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
         <Field
@@ -83,4 +87,6 @@ function validate(values){
 export default reduxForm({
   validate,
   form:'PostNewForm'
-})(PostNew)
+})(
+  connect(null,{createPost})(PostNew)
+)
