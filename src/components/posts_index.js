@@ -1,19 +1,23 @@
 import React , {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchPost} from '../actions'
+import {fetchPosts} from '../actions'
 import _ from 'lodash'
 import {Link} from 'react-router-dom'
 
 class PostsIndex extends Component {
   componentDidMount(){
-    this.props.fetchPost();
+    this.props.fetchPosts();
   }
 
   renderPost(){
     return _.map(this.props.posts, (post) => {
-      return (<li className="list-group-title" key={post.id}>
-        {post.title}
-      </li>
+      const linkTo = `/posts/${post.id}`
+      return (
+        <div key={post.id}>
+          <li className="list-group-title">
+            <Link to={linkTo}>{post.title}</Link>
+          </li>
+        </div>
       )
     });
   }
@@ -36,4 +40,4 @@ function mapStateToProps(state){
   return {posts:state.posts}
 }
 //like dispatch function
-export default connect(mapStateToProps,{fetchPost})(PostsIndex);
+export default connect(mapStateToProps,{fetchPosts})(PostsIndex);
